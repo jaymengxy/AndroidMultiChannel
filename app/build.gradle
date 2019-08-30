@@ -14,10 +14,25 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            storeFile file('multi.jks')
+            storePassword "mxymulti"
+            keyAlias "multiKey"
+            keyPassword "mxymulti"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFileName = "amc_${variant.buildType.name}_v${variant.versionName}.apk"
         }
     }
 }
