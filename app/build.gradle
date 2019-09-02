@@ -47,3 +47,19 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
+
+project.afterEvaluate {
+    android.applicationVariants.all { variant ->
+        variant.assemble.doLast {
+            if (variant.buildType.name.contains('release')) {
+                variant.outputs.each { output ->
+                    def apkPath = "build/outputs/apk/release/" + output.outputFileName
+                    exec {
+                        ignoreExitValue true
+                        commandLine "sh", "../mutil-pack/mutil-pack.sh", apkPath
+                    }
+                }
+            }
+        }
+    }
+}
